@@ -10,6 +10,7 @@ import { apiConnector } from "../../services/apiconnector"
 import { categories } from "../../services/apis"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropDown"
+import { FaXmark } from "react-icons/fa6";
 
 function Navbar() {
   const { token } = useSelector((state) => state.auth)
@@ -19,6 +20,7 @@ function Navbar() {
 
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(true)
 
   useEffect(() => {
     ;(async () => {
@@ -52,8 +54,8 @@ function Navbar() {
           <img src={logo} alt="Logo" width={160} height={32} loading="lazy" />
         </Link>
         {/* Navigation links */}
-        <nav className="hidden md:block">
-          <ul className="flex gap-x-6 text-richblack-25">
+        <nav className={open ? "hidden md:block":""}>
+          <ul className="flex gap-x-6 text-richblack-25 navList">
             {NavbarLinks.map((link, index) => (
               <li key={index}>
                 {link.title === "Catalog" ? (
@@ -111,7 +113,7 @@ function Navbar() {
           </ul>
         </nav>
         {/* Login / Signup / Dashboard */}
-        <div className="hidden items-center gap-x-4 md:flex">
+        <div className="navListLeft items-center gap-x-4 md:flex">
           {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
             <Link to="/dashboard/cart" className="relative">
               <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
@@ -139,7 +141,10 @@ function Navbar() {
           {token !== null && <ProfileDropdown />}
         </div>
         <button className="mr-4 md:hidden" onClick={()=>(console.log("ClickOUtline Menu"))}>
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF"/>
+          {
+        open ? <AiOutlineMenu fontSize={24} fill="#AFB2BF" className={open ? "fa-round": ""} onClick={()=>{setOpen(!open)}}/>
+        : <FaXmark fontSize={24} fill="#AFB2BF" className={"fa-round"} onClick={()=>{setOpen(!open)}}/>
+      } 
         </button>
       </div>
     </div>
